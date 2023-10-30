@@ -1,21 +1,17 @@
 from PyQt5 import QtWidgets, uic
 
 class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self):
+    def __init__(self, webCamSettings):
         super(MainWindow, self).__init__()
         uic.loadUi('mainwindow.ui', self)
         
-        BRIGHTNESS_VALUE_MAX = 100
-        BRIGHTNESS_VALUE_MIN = 0
-        self.brightnessSlider.setRange(BRIGHTNESS_VALUE_MIN, BRIGHTNESS_VALUE_MAX)
-        self.brightnessValue.setRange(BRIGHTNESS_VALUE_MIN, BRIGHTNESS_VALUE_MAX)
+        self.brightnessSlider.setRange(webCamSettings.BRIGHTNESS_VALUE_MIN, webCamSettings.BRIGHTNESS_VALUE_MAX)
+        self.brightnessValue.setRange(webCamSettings.BRIGHTNESS_VALUE_MIN, webCamSettings.BRIGHTNESS_VALUE_MAX)
         self.brightnessSlider.valueChanged.connect(self.brightnessValue.setValue)
         self.brightnessValue.valueChanged.connect(self.brightnessSlider.setValue)
 
-        CONTRAST_VALUE_MAX = 100
-        CONTRAST_VALUE_MIN = 0
-        self.contrastSlider.setRange(CONTRAST_VALUE_MIN, CONTRAST_VALUE_MAX)
-        self.contrastValue.setRange(CONTRAST_VALUE_MIN, CONTRAST_VALUE_MAX)
+        self.contrastSlider.setRange(webCamSettings.CONTRAST_VALUE_MIN, webCamSettings.CONTRAST_VALUE_MAX)
+        self.contrastValue.setRange(webCamSettings.CONTRAST_VALUE_MIN, webCamSettings.CONTRAST_VALUE_MAX)
         self.contrastSlider.valueChanged.connect(self.contrastValue.setValue)
         self.contrastValue.valueChanged.connect(self.contrastSlider.setValue)
 
