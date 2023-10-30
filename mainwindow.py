@@ -1,5 +1,6 @@
-from PyQt5 import QtWidgets, uic
 from webcamsettings import WebCamSettings
+
+from PyQt5 import QtWidgets, uic
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, webCamSettings: WebCamSettings):
