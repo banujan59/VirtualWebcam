@@ -15,6 +15,9 @@ class WebCamSettings():
             self.__brightnessValue = self.BRIGHTNESS_VALUE_MIN
         else:
             self.__brightnessValue = value
+        
+    def GetBrightness(self):
+        return self.__brightnessValue
 
     def SetContrast(self, value):
         if value > self.CONTRAST_VALUE_MAX:
@@ -23,3 +26,6 @@ class WebCamSettings():
             self.__contrastValue = self.CONTRAST_VALUE_MIN
         else:
             self.__contrastValue = value
+
+    def GetContrast(self):
+        return self.__contrastValue
