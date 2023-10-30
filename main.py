@@ -1,15 +1,16 @@
-import sys
+from webcamsettings import WebCamSettings
+from mainwindow import MainWindow
+from virtualwebcam import VirtualWebcam
 
-from PyQt5 import QtWidgets, uic
 import sys
-
-class Ui(QtWidgets.QMainWindow):
-    def __init__(self):
-        super(Ui, self).__init__()
-        uic.loadUi('mainwindow.ui', self)
-        self.show()
+from PyQt5 import QtWidgets
 
 if __name__ == "__main__":
+    webCamSettings = WebCamSettings()
+    virtualWebcam = VirtualWebcam(webCamSettings=webCamSettings)
+
     app = QtWidgets.QApplication(sys.argv)
-    window = Ui()
+    window = MainWindow(webCamSettings=webCamSettings)
     app.exec_()
+
+    virtualWebcam.Stop()
