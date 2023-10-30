@@ -11,6 +11,10 @@ class WebCamSettings():
         self.CONTRAST_VALUE_MIN = 1
         self.__contrastValue = 1
         self.__contrastDataLock = Lock()
+
+        self.__flipHorizontal = False
+        self.__flipVertical = False
+        self.__flipLock = Lock()
     
     def SetBrightness(self, value):
         with self.__brightnessDataLock:
@@ -37,3 +41,12 @@ class WebCamSettings():
     def GetContrast(self):
         with self.__contrastDataLock:
             return self.__contrastValue
+        
+    def SetFlip(self, hFlip : bool, vFlip: bool):
+        with self.__flipLock:
+            self.__flipHorizontal = hFlip
+            self.__flipVertical = vFlip
+
+    def GetFlip(self):
+        with self.__flipLock:
+            return self.__flipHorizontal, self.__flipVertical
