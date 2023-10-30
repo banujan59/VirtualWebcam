@@ -36,8 +36,8 @@ class VirtualWebcam():
                 # Display the resulting frame 
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-                alpha = 5.5 # Contrast control
-                beta = 10 # Brightness control
+                alpha = self.__webCamSettings.GetContrast() # Contrast control
+                beta = self.__webCamSettings.GetBrightness() # Brightness control
                 frame = cv2.convertScaleAbs(frame, alpha=alpha, beta=beta)
 
                 cam.send(frame)
