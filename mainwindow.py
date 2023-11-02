@@ -2,6 +2,7 @@ from webcamsettings import WebCamSettings
 from virtualwebcam import VirtualWebcam
 
 from PyQt5 import QtWidgets, uic
+from PyQt5.QtWidgets import QMessageBox
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, webCamSettings: WebCamSettings, virtualCam: VirtualWebcam):
@@ -19,6 +20,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setFixedSize(640, 480)
         self.setWindowTitle("Virtual Webcam by Banujan")
         self.show()
+
 
     # Setup:
     def __SetUIEnableState(self, enabled : bool):
@@ -58,7 +60,22 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # Slots:
     def __Connect2Camera(self):
-        print("You clicked !")
+        cameraIndex = self.cameraIndexBox.value()
+        resolutionIndex = self.resolutionSelector.currentIndex()
+        selectedResolution = self.__webCamSettings.GetPossibleResolutions()[resolutionIndex]
+
+        success, errorMessage = self.__virtualCam.ConnectToCamera(cameraIndex=cameraIndex, resolution=selectedResolution)
+
+        if success:
+            self.__SetUIEnableState(True)
+        else:
+            self.__SetUIEnableState(False)
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Critical)
+            msg.setText("Camera connection error.")
+            msg.setWindowTitle("Error!")
+            msg.setInformativeText(errorMessage)
+            msg.exec_()
 
     def __UpdateBrightnessData(self, value):
         self.__webCamSettings.SetBrightness(value=value)

@@ -7,26 +7,53 @@ import threading
 class VirtualWebcam():
     def __init__(self, webCamSettings: WebCamSettings):
         self.__webCamSettings = webCamSettings
-        self.__stopAllThreads = False
 
+        self.__cam = None
+        self.__stopAllThreads = False
         self.__webcamThread = threading.Thread(target=self.__StartVirtualWebcamThread)
-        self.__webcamThread.start()
+    
+    def ConnectToCamera(self, cameraIndex: int, resolution: tuple):
+        self.Stop()
+        
+        self.__cam = cv2.VideoCapture(cameraIndex, cv2.CAP_DSHOW)
+        print(type(self.__cam))
+        if not self.__cam.isOpened():
+            return False, f"Camera index {cameraIndex} is invalid."
+        
+        (width, height) = resolution
+        self.__cam.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+        self.__cam.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+
+        actualW = self.__cam.get(cv2.CAP_PROP_FRAME_WIDTH)
+        actualH = self.__cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
+
+        if actualW == width and actualH == height:
+            self.__resolutionWidth = width
+            self.__resolutionHeight = height
+            self.__stopAllThreads = False
+            self.__webcamThread.start()
+            return True, ""
+        
+        self.__cam.release()
+        return False, f"The camera index {cameraIndex} does not support the selected resolution ({width} x {height})"
+
 
     def Stop(self):
-        self.__stopAllThreads = True
-        self.__webcamThread.join()
+        if self.__webcamThread.is_alive():
+            self.__stopAllThreads = True
+            self.__webcamThread.join()
+
+        if self.__cam != None:
+            self.__cam.release()
+
+        cv2.destroyAllWindows()
 
     def __StartVirtualWebcamThread(self):
-        with pyvirtualcam.Camera(width=640, height=480, fps=30) as cam:
-            print(f'Using virtual camera: {cam.device}')
-
-            cap = cv2.VideoCapture(0)
-            if not cap.isOpened():
-                print("Cannot open camera")
-                exit()
-            while True:
+        with pyvirtualcam.Camera(width=self.__resolutionWidth, height=self.__resolutionHeight, fps=30) as virtualCam:
+            print(f'Using virtual camera: {virtualCam.device}')
+            while not self.__stopAllThreads:
                 # Capture frame-by-frame
-                ret, frame = cap.read()
+                ret, frame = self.__cam.read()
                 # if frame is read correctly ret is True
                 if not ret:
                     print("Can't receive frame (stream end?). Exiting ...")
@@ -34,15 +61,8 @@ class VirtualWebcam():
                 
                 frame = self.__ProcessFrame(frame=frame)
 
-                cam.send(frame)
-                cam.sleep_until_next_frame()
-                
-                if self.__stopAllThreads:
-                    break
-
-            # When everything done, release the capture
-            cap.release()
-            cv2.destroyAllWindows()
+                virtualCam.send(frame)
+                virtualCam.sleep_until_next_frame()
 
     def __ProcessFrame(self, frame):
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
