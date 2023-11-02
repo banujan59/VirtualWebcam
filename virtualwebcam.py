@@ -14,9 +14,8 @@ class VirtualWebcam():
     
     def ConnectToCamera(self, cameraIndex: int, resolution: tuple):
         self.Stop()
-        
+
         self.__cam = cv2.VideoCapture(cameraIndex, cv2.CAP_DSHOW)
-        print(type(self.__cam))
         if not self.__cam.isOpened():
             return False, f"Camera index {cameraIndex} is invalid."
         
