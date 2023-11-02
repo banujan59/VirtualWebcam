@@ -2,6 +2,7 @@ from webcamsettings import WebCamSettings
 from virtualwebcam import VirtualWebcam
 
 from PyQt5 import QtWidgets, uic
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMessageBox
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -35,12 +36,13 @@ class MainWindow(QtWidgets.QMainWindow):
         resolutions = self.__webCamSettings.GetPossibleResolutions()
         resolutionsStr = []
         for (width, height) in resolutions:
-            resolutionsStr.append(f"({width} x {height})")
+            resolutionsStr.append(f"{width} x {height}")
 
         self.resolutionSelector.addItems(resolutionsStr)
         self.resolutionSelector.setCurrentIndex(0)
 
         self.connectButton.clicked.connect(self.__Connect2Camera)
+        self.connectButton.setCursor(Qt.PointingHandCursor)
     
     def __SetupBrightnessAndContrastControls(self):
         self.brightnessSlider.setRange(self.__webCamSettings.BRIGHTNESS_VALUE_MIN, self.__webCamSettings.BRIGHTNESS_VALUE_MAX)
