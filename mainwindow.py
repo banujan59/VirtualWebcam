@@ -43,6 +43,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.connectButton.clicked.connect(self.__Connect2Camera)
         self.connectButton.setCursor(Qt.PointingHandCursor)
+
+        self.virtualCameraLabel.setText("")
+        self.__webCamSettings.AddVirtualCameraNameObserver(self.__SetVirtualCameraName)
     
     def __SetupBrightnessAndContrastControls(self):
         self.brightnessSlider.setRange(self.__webCamSettings.BRIGHTNESS_VALUE_MIN, self.__webCamSettings.BRIGHTNESS_VALUE_MAX)
@@ -92,5 +95,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def __SetImageFlip(self):
         self.__webCamSettings.SetFlip(self.hFlipBox.isChecked(), self.vFlipBox.isChecked())
 
-        
+    def __SetVirtualCameraName(self, name):
+        self.virtualCameraLabel.setText(name)
 
