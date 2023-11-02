@@ -2,6 +2,8 @@ from threading import Lock
 
 class WebCamSettings():
     def __init__(self):
+        self.cameraIndex = 0
+
         self.BRIGHTNESS_VALUE_MAX = 100
         self.BRIGHTNESS_VALUE_MIN = 1
         self.__brightnessValue = 1
@@ -50,3 +52,6 @@ class WebCamSettings():
     def GetFlip(self):
         with self.__flipLock:
             return self.__flipHorizontal, self.__flipVertical
+        
+    def GetPossibleResolutions(self):
+        return [(3840, 2160), (1920, 1080), (1280, 720), (1024, 768), (800, 600), (640, 480), (176, 144)]
