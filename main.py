@@ -10,7 +10,7 @@ if __name__ == "__main__":
     virtualWebcam = VirtualWebcam(webCamSettings=webCamSettings)
 
     app = QtWidgets.QApplication(sys.argv)
-    window = MainWindow(webCamSettings=webCamSettings)
+    window = MainWindow(webCamSettings=webCamSettings, virtualCam=virtualWebcam)
     app.exec_()
 
     virtualWebcam.Stop()
