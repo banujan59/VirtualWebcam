@@ -67,9 +67,12 @@ class VirtualWebcam():
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         # 1. Apply brightness & contrast 
-        alpha = self.__webCamSettings.GetContrast() # Contrast control
-        beta = self.__webCamSettings.GetBrightness() # Brightness control
+        brightness, contrast, sharpness = self.__webCamSettings.GetLightControls()
+        alpha = contrast
+        beta = brightness
         frame = cv2.convertScaleAbs(frame, alpha=alpha, beta=beta)
+        
+        # TODO sharpness
 
         # 2. Apply image flip
         hFlip, vFlip = self.__webCamSettings.GetFlip()

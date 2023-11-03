@@ -14,7 +14,7 @@ class MainWindow(QtWidgets.QMainWindow):
         uic.loadUi('mainwindow.ui', self)
 
         self.__SetupConnectionControls()
-        self.__SetupBrightnessAndContrastControls()
+        self.__SetupBrightnessControls()
         self.__SetupImageFlipControls()
 
         self.__SetUIEnableState(False)
@@ -29,6 +29,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.brightnessValue.setEnabled(enabled)
         self.contrastSlider.setEnabled(enabled)
         self.contrastValue.setEnabled(enabled)
+        self.sharpnessSlider.setEnabled(enabled)
+        self.sharpnessValue.setEnabled(enabled)
+
         self.hFlipBox.setEnabled(enabled)
         self.vFlipBox.setEnabled(enabled)
 
@@ -47,16 +50,24 @@ class MainWindow(QtWidgets.QMainWindow):
         self.virtualCameraLabel.setText("")
         self.__webCamSettings.AddVirtualCameraNameObserver(self.__SetVirtualCameraName)
     
-    def __SetupBrightnessAndContrastControls(self):
+    def __SetupBrightnessControls(self):
         self.brightnessSlider.setRange(self.__webCamSettings.BRIGHTNESS_VALUE_MIN, self.__webCamSettings.BRIGHTNESS_VALUE_MAX)
         self.brightnessValue.setRange(self.__webCamSettings.BRIGHTNESS_VALUE_MIN, self.__webCamSettings.BRIGHTNESS_VALUE_MAX)
-        self.brightnessSlider.valueChanged.connect(self.__UpdateBrightnessData)
-        self.brightnessValue.valueChanged.connect(self.__UpdateBrightnessData)
+        self.brightnessSlider.valueChanged.connect(self.__UpdateLightControls)
+        self.brightnessSlider.valueChanged.connect(self.brightnessValue.setValue)
+        self.brightnessValue.valueChanged.connect(self.brightnessSlider.setValue)
 
         self.contrastSlider.setRange(self.__webCamSettings.CONTRAST_VALUE_MIN, self.__webCamSettings.CONTRAST_VALUE_MAX)
         self.contrastValue.setRange(self.__webCamSettings.CONTRAST_VALUE_MIN, self.__webCamSettings.CONTRAST_VALUE_MAX)
-        self.contrastSlider.valueChanged.connect(self.__UpdateContrastData)
-        self.contrastValue.valueChanged.connect(self.__UpdateContrastData)
+        self.contrastSlider.valueChanged.connect(self.__UpdateLightControls)
+        self.contrastSlider.valueChanged.connect(self.contrastValue.setValue)
+        self.contrastValue.valueChanged.connect(self.contrastSlider.setValue)
+
+        self.sharpnessSlider.setRange(self.__webCamSettings.SHARPNESS_VALUE_MIN, self.__webCamSettings.SHARPNESS_VALUE_MAX)
+        self.sharpnessValue.setRange(self.__webCamSettings.SHARPNESS_VALUE_MIN, self.__webCamSettings.SHARPNESS_VALUE_MAX)
+        self.sharpnessSlider.valueChanged.connect(self.__UpdateLightControls)
+        self.sharpnessSlider.valueChanged.connect(self.sharpnessValue.setValue)
+        self.sharpnessValue.valueChanged.connect(self.sharpnessSlider.setValue)
 
     def __SetupImageFlipControls(self):
         self.hFlipBox.stateChanged.connect(self.__SetImageFlip)
@@ -82,15 +93,11 @@ class MainWindow(QtWidgets.QMainWindow):
             msg.setInformativeText(errorMessage)
             msg.exec_()
 
-    def __UpdateBrightnessData(self, value):
-        self.__webCamSettings.SetBrightness(value=value)
-        self.brightnessSlider.setValue(self.__webCamSettings.GetBrightness())
-        self.brightnessValue.setValue(self.__webCamSettings.GetBrightness())
-
-    def __UpdateContrastData(self, value):
-        self.__webCamSettings.SetContrast(value=value)
-        self.contrastSlider.setValue(self.__webCamSettings.GetContrast())
-        self.contrastValue.setValue(self.__webCamSettings.GetContrast())
+    def __UpdateLightControls(self, value):
+        brightness = self.brightnessSlider.value()
+        contrast = self.contrastSlider.value()
+        sharpness = self.sharpnessSlider.value()
+        self.__webCamSettings.SetLightControls(brightness=brightness, contrast=contrast, sharpness=sharpness)
 
     def __SetImageFlip(self):
         self.__webCamSettings.SetFlip(self.hFlipBox.isChecked(), self.vFlipBox.isChecked())

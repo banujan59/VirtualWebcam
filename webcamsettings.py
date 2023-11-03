@@ -4,43 +4,34 @@ class WebCamSettings():
     def __init__(self):
         self.cameraIndex = 0
 
+        self.__lightDataLock = Lock()
         self.BRIGHTNESS_VALUE_MAX = 100
         self.BRIGHTNESS_VALUE_MIN = 1
         self.__brightnessValue = 1
-        self.__brightnessDataLock = Lock()
 
         self.CONTRAST_VALUE_MAX = 5
         self.CONTRAST_VALUE_MIN = 1
         self.__contrastValue = 1
-        self.__contrastDataLock = Lock()
+
+        self.SHARPNESS_VALUE_MAX = 10
+        self.SHARPNESS_VALUE_MIN = 1
+        self.__sharpnessValue = 1
 
         self.__flipHorizontal = False
         self.__flipVertical = False
         self.__flipLock = Lock()
 
         self.__virtualCameraNameObservers = []
-    
-    def SetBrightness(self, value):
-        with self.__brightnessDataLock:
-            if value > self.BRIGHTNESS_VALUE_MAX:
-                self.__brightnessValue = self.BRIGHTNESS_VALUE_MAX
-            elif value < self.BRIGHTNESS_VALUE_MIN:
-                self.__brightnessValue = self.BRIGHTNESS_VALUE_MIN
-            else:
-                self.__brightnessValue = value
-        
-    def GetBrightness(self):
-        with self.__brightnessDataLock:
-         return self.__brightnessValue
 
-    def SetContrast(self, value):
-        with self.__contrastDataLock:
-            if value > self.CONTRAST_VALUE_MAX:
-                self.__contrastValue = self.CONTRAST_VALUE_MAX
-            elif value < self.CONTRAST_VALUE_MIN:
-                self.__contrastValue = self.CONTRAST_VALUE_MIN
-            else:
-                self.__contrastValue = value
+    def SetLightControls(self, brightness, contrast, sharpness):
+        with self.__lightDataLock:
+            self.__brightnessValue = brightness
+            self.__contrastValue = contrast
+            self.__sharpnessValue = sharpness
+
+    def GetLightControls(self):
+        with self.__lightDataLock:
+            return self.__brightnessValue, self.__contrastValue, self.__sharpnessValue
 
     def GetContrast(self):
         with self.__contrastDataLock:

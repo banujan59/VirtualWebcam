@@ -19,32 +19,22 @@
      <rect>
       <x>80</x>
       <y>60</y>
-      <width>441</width>
+      <width>501</width>
       <height>130</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="2">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>Resolution:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2" colspan="2">
-      <widget class="QSlider" name="contrastSlider">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QSpinBox" name="brightnessValue"/>
-     </item>
      <item row="3" column="0" colspan="2">
       <widget class="QSlider" name="brightnessSlider">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0" colspan="2">
+      <widget class="QCheckBox" name="hFlipBox">
+       <property name="text">
+        <string>Flip Horizontal</string>
        </property>
       </widget>
      </item>
@@ -55,20 +45,30 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label">
+     <item row="0" column="4">
+      <widget class="QPushButton" name="connectButton">
        <property name="text">
-        <string>Brightness: </string>
+        <string>Connect Camera</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="3">
-      <widget class="QSpinBox" name="contrastValue"/>
+     <item row="2" column="1">
+      <widget class="QSpinBox" name="brightnessValue"/>
      </item>
-     <item row="4" column="0" colspan="2">
-      <widget class="QCheckBox" name="hFlipBox">
+     <item row="4" column="2" colspan="2">
+      <widget class="QCheckBox" name="vFlipBox">
        <property name="text">
-        <string>Flip Horizontal</string>
+        <string>Flip Vertical</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="cameraIndexBox"/>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Resolution:</string>
        </property>
       </widget>
      </item>
@@ -79,30 +79,47 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QSpinBox" name="cameraIndexBox"/>
+     <item row="2" column="3">
+      <widget class="QSpinBox" name="contrastValue"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Brightness: </string>
+       </property>
+      </widget>
      </item>
      <item row="0" column="3">
       <widget class="QComboBox" name="resolutionSelector"/>
      </item>
-     <item row="4" column="2" colspan="2">
-      <widget class="QCheckBox" name="vFlipBox">
-       <property name="text">
-        <string>Flip Vertical</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="4">
-      <widget class="QPushButton" name="connectButton">
-       <property name="text">
-        <string>Connect Camera</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="0" colspan="5">
       <widget class="QLabel" name="virtualCameraLabel">
        <property name="text">
-        <string>TextLabel</string>
+        <string>Name Of Virtual Camera</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2" colspan="2">
+      <widget class="QSlider" name="contrastSlider">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="4">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Sharpness:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="5">
+      <widget class="QSpinBox" name="sharpnessValue"/>
+     </item>
+     <item row="3" column="4" colspan="2">
+      <widget class="QSlider" name="sharpnessSlider">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
