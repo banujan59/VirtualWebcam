@@ -49,7 +49,7 @@ class VirtualWebcam():
 
     def __StartVirtualWebcamThread(self):
         with pyvirtualcam.Camera(width=self.__resolutionWidth, height=self.__resolutionHeight, fps=30) as virtualCam:
-            print(f'Using virtual camera: {virtualCam.device}')
+            self.__webCamSettings.SetVirtualCameraName(f'Using virtual camera: {virtualCam.device}')
             while not self.__stopAllThreads:
                 # Capture frame-by-frame
                 ret, frame = self.__cam.read()
@@ -78,3 +78,4 @@ class VirtualWebcam():
         if vFlip:
             frame = cv2.flip(frame, 0)
         return frame
+    

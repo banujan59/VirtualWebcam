@@ -17,6 +17,8 @@ class WebCamSettings():
         self.__flipHorizontal = False
         self.__flipVertical = False
         self.__flipLock = Lock()
+
+        self.__virtualCameraNameObservers = []
     
     def SetBrightness(self, value):
         with self.__brightnessDataLock:
@@ -55,3 +57,11 @@ class WebCamSettings():
         
     def GetPossibleResolutions(self):
         return [(3840, 2160), (1920, 1080), (1280, 720), (1024, 768), (800, 600), (640, 480), (176, 144)]
+    
+    def AddVirtualCameraNameObserver(self, callbackFunction):
+        self.__virtualCameraNameObservers.append(callbackFunction)
+
+    def SetVirtualCameraName(self, name : str):
+        for callbackFunctions in self.__virtualCameraNameObservers:
+            callbackFunctions(name)
+            
