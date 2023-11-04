@@ -5,8 +5,8 @@ class WebCamSettings():
         self.cameraIndex = 0
 
         self.BRIGHTNESS_VALUE_MAX = 100
-        self.BRIGHTNESS_VALUE_MIN = 1
-        self.__brightnessValue = 1
+        self.BRIGHTNESS_VALUE_MIN = -100
+        self.__brightnessValue = 0
         self.__brightnessDataLock = Lock()
 
         self.CONTRAST_VALUE_MAX = 5
