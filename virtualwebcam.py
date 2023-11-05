@@ -2,6 +2,7 @@ from webcamsettings import WebCamSettings
 
 import pyvirtualcam
 import cv2 as cv2
+import numpy as np
 import threading
 
 class VirtualWebcam():
@@ -73,6 +74,12 @@ class VirtualWebcam():
         frame = cv2.convertScaleAbs(frame, alpha=alpha, beta=beta)
         
         # TODO sharpness
+        sharpnessMask = -1 * sharpness
+        sharpnessValue = 9 * sharpness
+        sharpen_filter=np.array([[sharpnessMask,sharpnessMask,sharpnessMask],
+                 [sharpnessMask,sharpnessValue,sharpnessMask],
+                [sharpnessMask,sharpnessMask,sharpnessMask]])
+        frame=cv2.filter2D(frame,-1,sharpen_filter)
 
         # 2. Apply image flip
         hFlip, vFlip = self.__webCamSettings.GetFlip()
