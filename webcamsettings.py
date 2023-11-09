@@ -20,7 +20,7 @@ class WebCamSettings():
 
         self.__virtualCameraNameObservers = []
 
-        self.__blurBackground = 0
+        self.__blurBackgroundEnabled = False
     
     def SetBrightness(self, value):
         with self.__brightnessDataLock:
@@ -67,8 +67,8 @@ class WebCamSettings():
         for callbackFunctions in self.__virtualCameraNameObservers:
             callbackFunctions(name)
 
-    def SetBlurBackground(self, state):
-        self.__blurBackground = state
-    def GetBlurBackground(self):
-        return self.__blurBackground
+    def SetBlurBackgroundEnabled(self, enabled : bool):
+        self.__blurBackgroundEnabled = enabled
+    def GetBlurBackgroundState(self):
+        return self.__blurBackgroundEnabled
             
