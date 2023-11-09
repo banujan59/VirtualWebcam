@@ -19,6 +19,8 @@ class WebCamSettings():
         self.__flipLock = Lock()
 
         self.__virtualCameraNameObservers = []
+
+        self.__blurBackground = 0
     
     def SetBrightness(self, value):
         with self.__brightnessDataLock:
@@ -64,4 +66,9 @@ class WebCamSettings():
     def SetVirtualCameraName(self, name : str):
         for callbackFunctions in self.__virtualCameraNameObservers:
             callbackFunctions(name)
+
+    def SetBlurBackground(self, state):
+        self.__blurBackground = state
+    def GetBlurBackground(self):
+        return self.__blurBackground
             

@@ -16,6 +16,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.__SetupConnectionControls()
         self.__SetupBrightnessAndContrastControls()
         self.__SetupImageFlipControls()
+        self.__SetupARFiltersPanel()
 
         self.__SetUIEnableState(False)
         self.setFixedSize(640, 480)
@@ -31,6 +32,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.contrastValue.setEnabled(enabled)
         self.hFlipBox.setEnabled(enabled)
         self.vFlipBox.setEnabled(enabled)
+        
+        self.blurBackgroundCheckBox.setEnabled(enabled)
 
     def __SetupConnectionControls(self):
         resolutions = self.__webCamSettings.GetPossibleResolutions()
@@ -61,7 +64,9 @@ class MainWindow(QtWidgets.QMainWindow):
     def __SetupImageFlipControls(self):
         self.hFlipBox.stateChanged.connect(self.__SetImageFlip)
         self.vFlipBox.stateChanged.connect(self.__SetImageFlip)
-    
+
+    def __SetupARFiltersPanel(self):
+        self.blurBackgroundCheckBox.stateChanged.connect(self.__webCamSettings.SetBlurBackground)
 
     # Slots:
     def __Connect2Camera(self):
