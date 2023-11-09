@@ -1,14 +1,14 @@
 from webcamsettings import WebCamSettings
-from virtualwebcam import VirtualWebcam
+from cameraController import CameraController
 
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMessageBox
 
 class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self, webCamSettings: WebCamSettings, virtualCam: VirtualWebcam):
+    def __init__(self, webCamSettings: WebCamSettings, controller: CameraController):
         self.__webCamSettings = webCamSettings
-        self.__virtualCam = virtualCam
+        self.__cameraController = controller
 
         super(MainWindow, self).__init__()
         uic.loadUi('mainwindow.ui', self)
@@ -74,7 +74,7 @@ class MainWindow(QtWidgets.QMainWindow):
         resolutionIndex = self.resolutionSelector.currentIndex()
         selectedResolution = self.__webCamSettings.GetPossibleResolutions()[resolutionIndex]
 
-        success, errorMessage = self.__virtualCam.ConnectToCamera(cameraIndex=cameraIndex, resolution=selectedResolution)
+        success, errorMessage = self.__cameraController.ConnectToCamera(cameraIndex=cameraIndex, resolution=selectedResolution)
 
         if success:
             self.__SetUIEnableState(True)
