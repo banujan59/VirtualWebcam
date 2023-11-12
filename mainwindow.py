@@ -3,7 +3,7 @@ from cameraController import CameraController
 
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QFileDialog
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, webCamSettings: WebCamSettings, controller: CameraController):
@@ -33,6 +33,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.hFlipBox.setEnabled(enabled)
         self.vFlipBox.setEnabled(enabled)
         
+        self.chooseBgButton.setEnabled(enabled)
+        self.resetBgButton.setEnabled(enabled)
+
         self.bgBlurSlider.setEnabled(enabled)
         self.bgBlurValue.setEnabled(enabled)
 
@@ -72,6 +75,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.bgBlurSlider.valueChanged.connect(self.__UpdateBgBlurData)
         self.bgBlurValue.valueChanged.connect(self.__UpdateBgBlurData)
 
+        self.chooseBgButton.clicked.connect(self.__ChooseBgImage)
+        self.resetBgButton.clicked.connect(self.__webCamSettings.ResetBgImage)
+
     # Slots:
     def __Connect2Camera(self):
         cameraIndex = self.cameraIndexBox.value()
@@ -84,12 +90,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.__SetUIEnableState(True)
         else:
             self.__SetUIEnableState(False)
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Critical)
-            msg.setText("Camera connection error.")
-            msg.setWindowTitle("Error!")
-            msg.setInformativeText(errorMessage)
-            msg.exec_()
+            self.__ShowErrorDialog("Camera connection error.", errorMessage)
 
     def __UpdateBrightnessData(self, value):
         self.__webCamSettings.SetBrightness(value=value)
@@ -104,6 +105,13 @@ class MainWindow(QtWidgets.QMainWindow):
     def __SetImageFlip(self):
         self.__webCamSettings.SetFlip(self.hFlipBox.isChecked(), self.vFlipBox.isChecked())
 
+    def __ChooseBgImage(self):
+        fname, _ = QFileDialog.getOpenFileName(self, 'Select Background image', '.', 'Image files (*.jpg *.png *.bmp *.jpeg)')
+        success = self.__webCamSettings.SetBgImage(fname)
+
+        if not success:
+            self.__ShowErrorDialog("Image reding error.", "The selected image could not be read")
+
     def __UpdateBgBlurData(self, value):
         self.__webCamSettings.SetBlurBackgroundValue(value=value)
         self.bgBlurSlider.setValue(self.__webCamSettings.GetBlurBackgroundValue())
@@ -113,3 +121,11 @@ class MainWindow(QtWidgets.QMainWindow):
     def __SetVirtualCameraName(self, name):
         self.virtualCameraLabel.setText(name)
 
+    # Others
+    def __ShowErrorDialog(self, text, informativeText):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Critical)
+        msg.setText(text)
+        msg.setWindowTitle("Error!")
+        msg.setInformativeText(informativeText)
+        msg.exec_()

@@ -1,4 +1,6 @@
 from threading import Lock
+import cv2
+import numpy as np
 
 class WebCamSettings():
     def __init__(self):
@@ -19,10 +21,11 @@ class WebCamSettings():
 
         self.__virtualCameraNameObservers = []
 
-        
         self.BLUR_VALUE_MIN = 0
         self.BLUR_VALUE_MAX = 100
         self.__bgBlurValue = 0
+        
+        self.__bgImage = None
     
     def SetBrightness(self, value):
         with self.__dataAccessMutex:
@@ -82,5 +85,16 @@ class WebCamSettings():
         with self.__dataAccessMutex:
             return self.__bgBlurValue
             
+    def ResetBgImage(self):
+        with self.__dataAccessMutex:
+            self.__bgImage = None
+    
+    def SetBgImage(self, path):
+        with self.__dataAccessMutex:
+            print(path)
+            return True
 
+    def GetBgImage(self):
+        with self.__dataAccessMutex:
+            return self.__bgImage
     
