@@ -4,6 +4,8 @@ from realWebcam import RealWebcam
 import pyvirtualcam
 import cv2 as cv2
 import threading
+import mediapipe as mp
+import numpy as np
 
 class VirtualWebcam():
     def __init__(self, webCamSettings: WebCamSettings):
@@ -11,6 +13,17 @@ class VirtualWebcam():
 
         self.__stopAllThreads = False
         self.__webcamThread = threading.Thread(target=self.__StartVirtualWebcamThread)
+
+        # Init media pipe for AR filters:
+        self.__baseOptions = mp.tasks.BaseOptions
+        self.__imageSegmenter = mp.tasks.vision.ImageSegmenter
+        self.__imageSegmenterOptions = mp.tasks.vision.ImageSegmenterOptions
+        self.__visionRunningMode = mp.tasks.vision.RunningMode
+
+        self.__mediaPipeOptions = self.__imageSegmenterOptions(
+        base_options=self.__baseOptions(model_asset_path='Model/selfie_segmenter_landscape.tflite'),
+        running_mode=self.__visionRunningMode.IMAGE,
+        output_category_mask=True)
 
     def Start(self, webcam : RealWebcam):
         self.__stopAllThreads = False
@@ -59,8 +72,18 @@ class VirtualWebcam():
         blurBgValue = self.__webCamSettings.GetBlurBackgroundValue()
         if blurBgValue > 0:
             kernel_size = (9,9)
+            blurBg = frame
             for _ in range(blurBgValue):
-                frame = cv2.GaussianBlur(frame, kernel_size, 3)
+                blurBg = cv2.GaussianBlur(blurBg, kernel_size, 3)
+
+            with self.__imageSegmenter.create_from_options(self.__mediaPipeOptions) as segmenter:
+                mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
+                segmented_masks = segmenter.segment(mp_image)
+                category_mask = segmented_masks.category_mask
+
+                image_data = mp_image.numpy_view()
+                condition = np.stack((category_mask.numpy_view(),) * 3, axis=-1) > 0.95
+                frame = np.where(condition, blurBg, image_data)
 
         return frame
     
