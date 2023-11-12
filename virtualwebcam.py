@@ -70,6 +70,11 @@ class VirtualWebcam():
         if vFlip:
             frame = cv2.flip(frame, 0)
 
+        # Apply background image
+        bgImage = self.__webCamSettings.GetBgImage()
+        if bgImage.shape != (0,0): # Checks if the image has been set
+            frame = self.__ReplaceBackground(frame, bgImage)
+
         # Apply background blur
         blurBgValue = self.__webCamSettings.GetBlurBackgroundValue()
         if blurBgValue > 0:

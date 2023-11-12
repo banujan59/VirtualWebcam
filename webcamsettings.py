@@ -26,7 +26,7 @@ class WebCamSettings():
         self.BLUR_VALUE_MAX = 100
         self.__bgBlurValue = 0
         
-        self.__bgImage = None
+        self.__bgImage = np.empty((0,0))
     
     def SetBrightness(self, value):
         with self.__dataAccessMutex:
@@ -88,7 +88,7 @@ class WebCamSettings():
             
     def ResetBgImage(self):
         with self.__dataAccessMutex:
-            self.__bgImage = None
+            self.__bgImage = np.empty((0,0))
     
     def SetBgImage(self, path):
         with self.__dataAccessMutex:
