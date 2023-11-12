@@ -25,6 +25,8 @@ class VirtualWebcam():
         running_mode=self.__visionRunningMode.IMAGE,
         output_category_mask=True)
 
+        self.__segmenter = self.__imageSegmenter.create_from_options(self.__mediaPipeOptions)
+
     def Start(self, webcam : RealWebcam):
         self.__stopAllThreads = False
         self.__webcam = webcam
@@ -76,14 +78,17 @@ class VirtualWebcam():
             for _ in range(blurBgValue):
                 blurBg = cv2.GaussianBlur(blurBg, kernel_size, 3)
 
-            with self.__imageSegmenter.create_from_options(self.__mediaPipeOptions) as segmenter:
-                mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
-                segmented_masks = segmenter.segment(mp_image)
-                category_mask = segmented_masks.category_mask
-
-                image_data = mp_image.numpy_view()
-                condition = np.stack((category_mask.numpy_view(),) * 3, axis=-1) > 0.95
-                frame = np.where(condition, blurBg, image_data)
+            frame = self.__ReplaceBackground(frame, blurBg)
 
         return frame
+
+    def __ReplaceBackground(self, frame, background):
+        mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
+        segmented_masks = self.__segmenter.segment(mp_image)
+        category_mask = segmented_masks.category_mask
+
+        image_data = mp_image.numpy_view()
+        condition = np.stack((category_mask.numpy_view(),) * 3, axis=-1) > 0.95
+        return np.where(condition, background, image_data)
+
     
