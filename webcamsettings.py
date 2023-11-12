@@ -5,6 +5,7 @@ import numpy as np
 class WebCamSettings():
     def __init__(self):
         self.cameraIndex = 0
+        self.currentResolution = (0,0)
 
         self.__dataAccessMutex = Lock()
 
@@ -91,7 +92,13 @@ class WebCamSettings():
     
     def SetBgImage(self, path):
         with self.__dataAccessMutex:
-            print(path)
+            img = cv2.imread(path)
+            
+            if img is None:
+                return False
+            
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            self.__bgImage = cv2.resize(img, self.currentResolution)
             return True
 
     def GetBgImage(self):

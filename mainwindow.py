@@ -88,6 +88,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         if success:
             self.__SetUIEnableState(True)
+            self.__webCamSettings.currentResolution = selectedResolution
         else:
             self.__SetUIEnableState(False)
             self.__ShowErrorDialog("Camera connection error.", errorMessage)
