@@ -27,15 +27,17 @@ class WebCamSettings():
         self.__bgBlurValue = 0
         
         self.__bgImage = np.empty((0,0))
+
+    def __ClipValue(self, value, min, max):
+        if value > self.BRIGHTNESS_VALUE_MAX:
+            return max
+        elif value < self.BRIGHTNESS_VALUE_MIN:
+            return min
+        return value
     
     def SetBrightness(self, value):
         with self.__dataAccessMutex:
-            if value > self.BRIGHTNESS_VALUE_MAX:
-                self.__brightnessValue = self.BRIGHTNESS_VALUE_MAX
-            elif value < self.BRIGHTNESS_VALUE_MIN:
-                self.__brightnessValue = self.BRIGHTNESS_VALUE_MIN
-            else:
-                self.__brightnessValue = value
+            self.__brightnessValue = self.__ClipValue(value, self.BRIGHTNESS_VALUE_MIN, self.BRIGHTNESS_VALUE_MAX)
         
     def GetBrightness(self):
         with self.__dataAccessMutex:
@@ -43,12 +45,7 @@ class WebCamSettings():
 
     def SetContrast(self, value):
         with self.__dataAccessMutex:
-            if value > self.CONTRAST_VALUE_MAX:
-                self.__contrastValue = self.CONTRAST_VALUE_MAX
-            elif value < self.CONTRAST_VALUE_MIN:
-                self.__contrastValue = self.CONTRAST_VALUE_MIN
-            else:
-                self.__contrastValue = value
+            self.__contrastValue = self.__ClipValue(value, self.CONTRAST_VALUE_MAX, self.CONTRAST_VALUE_MIN)
 
     def GetContrast(self):
         with self.__dataAccessMutex:
@@ -75,12 +72,7 @@ class WebCamSettings():
 
     def SetBlurBackgroundValue(self, value : int):
         with self.__dataAccessMutex:
-            if value > self.BLUR_VALUE_MAX:
-                self.__bgBlurValue = self.BLUR_VALUE_MAX
-            elif value < self.BLUR_VALUE_MIN:
-                self.__bgBlurValue = self.BLUR_VALUE_MIN
-            else:
-                self.__bgBlurValue = value
+            self.__bgBlurValue = self.__ClipValue(value, self.BLUR_VALUE_MAX, self.BLUR_VALUE_MIN)
 
     def GetBlurBackgroundValue(self):
         with self.__dataAccessMutex:
