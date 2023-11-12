@@ -77,6 +77,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.chooseBgButton.clicked.connect(self.__ChooseBgImage)
         self.resetBgButton.clicked.connect(self.__webCamSettings.ResetBgImage)
+        
+        self.chooseBgButton.setCursor(Qt.PointingHandCursor)
+        self.resetBgButton.setCursor(Qt.PointingHandCursor)
 
     # Slots:
     def __Connect2Camera(self):
