@@ -33,7 +33,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.hFlipBox.setEnabled(enabled)
         self.vFlipBox.setEnabled(enabled)
         
-        self.blurBackgroundCheckBox.setEnabled(enabled)
+        self.bgBlurSlider.setEnabled(enabled)
+        self.bgBlurValue.setEnabled(enabled)
 
     def __SetupConnectionControls(self):
         resolutions = self.__webCamSettings.GetPossibleResolutions()
@@ -66,7 +67,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.vFlipBox.stateChanged.connect(self.__SetImageFlip)
 
     def __SetupARFiltersPanel(self):
-        self.blurBackgroundCheckBox.stateChanged.connect(lambda state: self.__webCamSettings.SetBlurBackgroundEnabled(state != 0))
+        self.bgBlurSlider.setRange(self.__webCamSettings.BLUR_VALUE_MIN, self.__webCamSettings.BLUR_VALUE_MAX)
+        self.bgBlurValue.setRange(self.__webCamSettings.BLUR_VALUE_MIN, self.__webCamSettings.BLUR_VALUE_MAX)
+        self.bgBlurSlider.valueChanged.connect(self.__UpdateBgBlurData)
+        self.bgBlurValue.valueChanged.connect(self.__UpdateBgBlurData)
 
     # Slots:
     def __Connect2Camera(self):
@@ -99,6 +103,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __SetImageFlip(self):
         self.__webCamSettings.SetFlip(self.hFlipBox.isChecked(), self.vFlipBox.isChecked())
+
+    def __UpdateBgBlurData(self, value):
+        self.__webCamSettings.SetBlurBackgroundValue(value=value)
+        self.bgBlurSlider.setValue(self.__webCamSettings.GetBlurBackgroundValue())
+        self.bgBlurValue.setValue(self.__webCamSettings.GetBlurBackgroundValue())
+
 
     def __SetVirtualCameraName(self, name):
         self.virtualCameraLabel.setText(name)

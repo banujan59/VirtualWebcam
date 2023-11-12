@@ -4,26 +4,28 @@ class WebCamSettings():
     def __init__(self):
         self.cameraIndex = 0
 
+        self.__dataAccessMutex = Lock()
+
         self.BRIGHTNESS_VALUE_MAX = 100
         self.BRIGHTNESS_VALUE_MIN = -100
         self.__brightnessValue = 0
-        self.__brightnessDataLock = Lock()
 
         self.CONTRAST_VALUE_MAX = 5
         self.CONTRAST_VALUE_MIN = 1
         self.__contrastValue = 1
-        self.__contrastDataLock = Lock()
 
         self.__flipHorizontal = False
         self.__flipVertical = False
-        self.__flipLock = Lock()
 
         self.__virtualCameraNameObservers = []
 
-        self.__blurBackgroundEnabled = False
+        
+        self.BLUR_VALUE_MIN = 0
+        self.BLUR_VALUE_MAX = 100
+        self.__bgBlurValue = 0
     
     def SetBrightness(self, value):
-        with self.__brightnessDataLock:
+        with self.__dataAccessMutex:
             if value > self.BRIGHTNESS_VALUE_MAX:
                 self.__brightnessValue = self.BRIGHTNESS_VALUE_MAX
             elif value < self.BRIGHTNESS_VALUE_MIN:
@@ -32,11 +34,11 @@ class WebCamSettings():
                 self.__brightnessValue = value
         
     def GetBrightness(self):
-        with self.__brightnessDataLock:
+        with self.__dataAccessMutex:
          return self.__brightnessValue
 
     def SetContrast(self, value):
-        with self.__contrastDataLock:
+        with self.__dataAccessMutex:
             if value > self.CONTRAST_VALUE_MAX:
                 self.__contrastValue = self.CONTRAST_VALUE_MAX
             elif value < self.CONTRAST_VALUE_MIN:
@@ -45,16 +47,16 @@ class WebCamSettings():
                 self.__contrastValue = value
 
     def GetContrast(self):
-        with self.__contrastDataLock:
+        with self.__dataAccessMutex:
             return self.__contrastValue
         
     def SetFlip(self, hFlip : bool, vFlip: bool):
-        with self.__flipLock:
+        with self.__dataAccessMutex:
             self.__flipHorizontal = hFlip
             self.__flipVertical = vFlip
 
     def GetFlip(self):
-        with self.__flipLock:
+        with self.__dataAccessMutex:
             return self.__flipHorizontal, self.__flipVertical
         
     def GetPossibleResolutions(self):
@@ -67,8 +69,18 @@ class WebCamSettings():
         for callbackFunctions in self.__virtualCameraNameObservers:
             callbackFunctions(name)
 
-    def SetBlurBackgroundEnabled(self, enabled : bool):
-        self.__blurBackgroundEnabled = enabled
-    def GetBlurBackgroundState(self):
-        return self.__blurBackgroundEnabled
+    def SetBlurBackgroundValue(self, value : int):
+        with self.__dataAccessMutex:
+            if value > self.BLUR_VALUE_MAX:
+                self.__bgBlurValue = self.BLUR_VALUE_MAX
+            elif value < self.BLUR_VALUE_MIN:
+                self.__bgBlurValue = self.BLUR_VALUE_MIN
+            else:
+                self.__bgBlurValue = value
+
+    def GetBlurBackgroundValue(self):
+        with self.__dataAccessMutex:
+            return self.__bgBlurValue
             
+
+    

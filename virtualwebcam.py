@@ -54,5 +54,13 @@ class VirtualWebcam():
             frame = cv2.flip(frame, 1)
         if vFlip:
             frame = cv2.flip(frame, 0)
+
+        # Apply background blur
+        blurBgValue = self.__webCamSettings.GetBlurBackgroundValue()
+        if blurBgValue > 0:
+            kernel_size = (9,9)
+            for _ in range(blurBgValue):
+                frame = cv2.GaussianBlur(frame, kernel_size, 3)
+
         return frame
     
