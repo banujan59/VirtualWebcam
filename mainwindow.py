@@ -33,7 +33,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.hFlipBox.setEnabled(enabled)
         self.vFlipBox.setEnabled(enabled)
         
-        self.blurBackgroundCheckBox.setEnabled(True)
+        self.blurBackgroundCheckBox.setEnabled(enabled)
 
     def __SetupConnectionControls(self):
         resolutions = self.__webCamSettings.GetPossibleResolutions()
