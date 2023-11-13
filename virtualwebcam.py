@@ -28,8 +28,11 @@ class VirtualWebcam():
         self.__segmenter = self.__imageSegmenter.create_from_options(self.__mediaPipeOptions)
 
     def Start(self, webcam : RealWebcam):
+        self.Stop()
         self.__stopAllThreads = False
         self.__webcam = webcam
+        
+        self.__webcamThread = threading.Thread(target=self.__StartVirtualWebcamThread)
         self.__webcamThread.start()
 
     def Stop(self):
