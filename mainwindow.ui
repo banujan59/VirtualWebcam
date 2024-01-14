@@ -19,73 +19,98 @@
      <rect>
       <x>80</x>
       <y>60</y>
-      <width>441</width>
-      <height>130</height>
+      <width>534</width>
+      <height>221</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="2">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>Resolution:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2" colspan="2">
-      <widget class="QSlider" name="contrastSlider">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QSpinBox" name="brightnessValue"/>
-     </item>
-     <item row="3" column="0" colspan="2">
-      <widget class="QSlider" name="brightnessSlider">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Index of your camera:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Brightness: </string>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="3">
-      <widget class="QSpinBox" name="contrastValue"/>
-     </item>
-     <item row="4" column="0" colspan="2">
-      <widget class="QCheckBox" name="hFlipBox">
-       <property name="text">
-        <string>Flip Horizontal</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
       <widget class="QLabel" name="label_2">
        <property name="text">
         <string>Contrast:</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QSpinBox" name="cameraIndexBox"/>
+     <item row="2" column="2">
+      <widget class="QSpinBox" name="brightnessValue"/>
      </item>
      <item row="0" column="3">
-      <widget class="QComboBox" name="resolutionSelector"/>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Resolution:</string>
+       </property>
+      </widget>
      </item>
-     <item row="4" column="2" colspan="2">
+     <item row="5" column="1" colspan="5">
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Index of your camera:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QSpinBox" name="cameraIndexBox"/>
+     </item>
+     <item row="3" column="3" colspan="2">
+      <widget class="QSlider" name="contrastSlider">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1" colspan="2">
+      <widget class="QCheckBox" name="hFlipBox">
+       <property name="text">
+        <string>Flip Horizontal</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="4">
+      <widget class="QSpinBox" name="contrastValue"/>
+     </item>
+     <item row="3" column="1" colspan="2">
+      <widget class="QSlider" name="brightnessSlider">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1" colspan="5">
+      <widget class="QLabel" name="virtualCameraLabel">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Brightness: </string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="5">
+      <widget class="QPushButton" name="connectButton">
+       <property name="text">
+        <string>Connect Camera</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>AR filters:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="3" colspan="2">
       <widget class="QCheckBox" name="vFlipBox">
        <property name="text">
         <string>Flip Vertical</string>
@@ -93,16 +118,43 @@
       </widget>
      </item>
      <item row="0" column="4">
-      <widget class="QPushButton" name="connectButton">
-       <property name="text">
-        <string>Connect Camera</string>
+      <widget class="QComboBox" name="resolutionSelector"/>
+     </item>
+     <item row="7" column="4">
+      <widget class="QSpinBox" name="bgBlurValue"/>
+     </item>
+     <item row="8" column="3" colspan="2">
+      <widget class="QSlider" name="bgBlurSlider">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
-     <item row="1" column="0" colspan="5">
-      <widget class="QLabel" name="virtualCameraLabel">
+     <item row="7" column="1">
+      <widget class="QLabel" name="label_7">
        <property name="text">
-        <string>TextLabel</string>
+        <string>Custom Background:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="2">
+      <widget class="QPushButton" name="chooseBgButton">
+       <property name="text">
+        <string>Choose image</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="3">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Background blur intensity:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="2">
+      <widget class="QPushButton" name="resetBgButton">
+       <property name="text">
+        <string>Reset</string>
        </property>
       </widget>
      </item>

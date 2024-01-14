@@ -25,14 +25,14 @@ After entering camera settings, click on "Connect Camera" button to connect to t
 2. Flip image
     - You can flip the image horizontally or vertically to see things from a different perspective...
 
+3. AR Filters
+    - Choose a custom background to apply. You have the option to choose any image and/or to blur your background. 
+
 
 
 ## Possible features in the future
 1. Upscaling camera quality
     - Allow users to go above the resolution supported natively by their webcam.
 
-2. AR Filters
-    - Allow users to enjoy AR filters. Ideas : background effects, face detection, etc.
-
-3. Fisheye correction
+2. Fisheye correction
     - If your webcam suffers from a fisheye correction, you will be able to correct it and display the undistorted image in your virtual webcam. 

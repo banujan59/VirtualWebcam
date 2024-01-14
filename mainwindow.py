@@ -1,14 +1,14 @@
 from webcamsettings import WebCamSettings
-from virtualwebcam import VirtualWebcam
+from cameraController import CameraController
 
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QFileDialog
 
 class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self, webCamSettings: WebCamSettings, virtualCam: VirtualWebcam):
+    def __init__(self, webCamSettings: WebCamSettings, controller: CameraController):
         self.__webCamSettings = webCamSettings
-        self.__virtualCam = virtualCam
+        self.__cameraController = controller
 
         super(MainWindow, self).__init__()
         uic.loadUi('mainwindow.ui', self)
@@ -16,6 +16,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.__SetupConnectionControls()
         self.__SetupBrightnessAndContrastControls()
         self.__SetupImageFlipControls()
+        self.__SetupARFiltersPanel()
 
         self.__SetUIEnableState(False)
         self.setFixedSize(640, 480)
@@ -31,6 +32,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.contrastValue.setEnabled(enabled)
         self.hFlipBox.setEnabled(enabled)
         self.vFlipBox.setEnabled(enabled)
+        
+        self.chooseBgButton.setEnabled(enabled)
+        self.resetBgButton.setEnabled(enabled)
+
+        self.bgBlurSlider.setEnabled(enabled)
+        self.bgBlurValue.setEnabled(enabled)
 
     def __SetupConnectionControls(self):
         resolutions = self.__webCamSettings.GetPossibleResolutions()
@@ -61,7 +68,18 @@ class MainWindow(QtWidgets.QMainWindow):
     def __SetupImageFlipControls(self):
         self.hFlipBox.stateChanged.connect(self.__SetImageFlip)
         self.vFlipBox.stateChanged.connect(self.__SetImageFlip)
-    
+
+    def __SetupARFiltersPanel(self):
+        self.bgBlurSlider.setRange(self.__webCamSettings.BLUR_VALUE_MIN, self.__webCamSettings.BLUR_VALUE_MAX)
+        self.bgBlurValue.setRange(self.__webCamSettings.BLUR_VALUE_MIN, self.__webCamSettings.BLUR_VALUE_MAX)
+        self.bgBlurSlider.valueChanged.connect(self.__UpdateBgBlurData)
+        self.bgBlurValue.valueChanged.connect(self.__UpdateBgBlurData)
+
+        self.chooseBgButton.clicked.connect(self.__ChooseBgImage)
+        self.resetBgButton.clicked.connect(self.__webCamSettings.ResetBgImage)
+        
+        self.chooseBgButton.setCursor(Qt.PointingHandCursor)
+        self.resetBgButton.setCursor(Qt.PointingHandCursor)
 
     # Slots:
     def __Connect2Camera(self):
@@ -69,18 +87,14 @@ class MainWindow(QtWidgets.QMainWindow):
         resolutionIndex = self.resolutionSelector.currentIndex()
         selectedResolution = self.__webCamSettings.GetPossibleResolutions()[resolutionIndex]
 
-        success, errorMessage = self.__virtualCam.ConnectToCamera(cameraIndex=cameraIndex, resolution=selectedResolution)
+        success, errorMessage = self.__cameraController.ConnectToCamera(cameraIndex=cameraIndex, resolution=selectedResolution)
 
         if success:
             self.__SetUIEnableState(True)
+            self.__webCamSettings.currentResolution = selectedResolution
         else:
             self.__SetUIEnableState(False)
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Critical)
-            msg.setText("Camera connection error.")
-            msg.setWindowTitle("Error!")
-            msg.setInformativeText(errorMessage)
-            msg.exec_()
+            self.__ShowErrorDialog("Camera connection error.", errorMessage)
 
     def __UpdateBrightnessData(self, value):
         self.__webCamSettings.SetBrightness(value=value)
@@ -95,6 +109,27 @@ class MainWindow(QtWidgets.QMainWindow):
     def __SetImageFlip(self):
         self.__webCamSettings.SetFlip(self.hFlipBox.isChecked(), self.vFlipBox.isChecked())
 
+    def __ChooseBgImage(self):
+        fname, _ = QFileDialog.getOpenFileName(self, 'Select Background image', '.', 'Image files (*.jpg *.png *.bmp *.jpeg)')
+        success = self.__webCamSettings.SetBgImage(fname)
+
+        if not success:
+            self.__ShowErrorDialog("Image reding error.", "The selected image could not be read")
+
+    def __UpdateBgBlurData(self, value):
+        self.__webCamSettings.SetBlurBackgroundValue(value=value)
+        self.bgBlurSlider.setValue(self.__webCamSettings.GetBlurBackgroundValue())
+        self.bgBlurValue.setValue(self.__webCamSettings.GetBlurBackgroundValue())
+
+
     def __SetVirtualCameraName(self, name):
         self.virtualCameraLabel.setText(name)
 
+    # Others
+    def __ShowErrorDialog(self, text, informativeText):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Critical)
+        msg.setText(text)
+        msg.setWindowTitle("Error!")
+        msg.setInformativeText(informativeText)
+        msg.exec_()
